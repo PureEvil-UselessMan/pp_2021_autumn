@@ -176,7 +176,7 @@ int Allreduce(void* sendbuf, void* recvbuf, int count, MPI_Datatype type,
     if (dif < 0) {
         dif = FuncNum + dif;
     }
-    int ui = ceil(log(dif + 1) / log(2));
+    int ui = ceil(logf(dif + 1) / logf(2));
     for (int i = ui; pow(2, i) + dif < FuncNum; i++) {
         int num = pow(2, i) + dif + root;
         if (num >= FuncNum) {
