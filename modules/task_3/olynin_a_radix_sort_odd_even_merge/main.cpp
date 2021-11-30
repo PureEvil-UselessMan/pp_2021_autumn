@@ -4,7 +4,6 @@
 #include "./radix_sort_odd_even_merge.h"
 
 TEST(Accessory_Functions_Tests, RadixSort_test) {
-
     int ProcRank;
     MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
 
@@ -20,7 +19,6 @@ TEST(Accessory_Functions_Tests, RadixSort_test) {
 }
 
 TEST(Accessory_Functions_Tests, Merge_test) {
-
     int ProcRank;
     MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
 
@@ -35,7 +33,6 @@ TEST(Accessory_Functions_Tests, Merge_test) {
 }
 
 TEST(Accessory_Functions_Tests, Sequential_odd_even_merge_test) {
-
     int ProcRank;
     MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
 
@@ -50,7 +47,6 @@ TEST(Accessory_Functions_Tests, Sequential_odd_even_merge_test) {
 }
 
 TEST(Parallel_Radix_Sort_Tests, Parallel_radix_sort_small_test) {
-
     int ProcNum, ProcRank;
     MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
     MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
@@ -74,7 +70,6 @@ TEST(Parallel_Radix_Sort_Tests, Parallel_radix_sort_small_test) {
 }
 
 TEST(Parallel_Radix_Sort_Tests, Parallel_radix_sort_large_test) {
-
     int ProcNum, ProcRank;
     MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
     MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);

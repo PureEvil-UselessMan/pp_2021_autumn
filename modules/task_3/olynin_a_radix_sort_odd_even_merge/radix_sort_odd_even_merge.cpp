@@ -17,7 +17,7 @@ std::vector<int> RadixSort(std::vector<int> main_data, int n) {
 
         main_data.clear();
         for (int i = 0; i < 10; i++) {
-            for(size_t j = 0; j < sorted_data[i].size(); j++) {
+            for (size_t j = 0; j < sorted_data[i].size(); j++) {
                 main_data.push_back(sorted_data[i][j]);
             }
             sorted_data[i].clear();
@@ -33,7 +33,7 @@ int GetMaxPower(std::vector<int> data) {
     int size = data.size();
     while (size > 0) {
         max_power++;
-        for(size_t i = 0; i < data.size(); i++) {
+        for (size_t i = 0; i < data.size(); i++) {
             int div = data[i] / powf(10, max_power);
             if (div == 0)
                 size--;
@@ -80,8 +80,8 @@ std::vector<int> OddEvenMerge(std::vector<int> first, std::vector<int> second) {
     std::vector<int> first_even_tmp = first;
     std::vector<int> second_even_tmp = second;
 
-    EvenSplitter(first_even_tmp, second_even_tmp);
-    OddSplitter(first_odd_tmp, second_odd_tmp);
+    EvenSplitter(&first_even_tmp, &second_even_tmp);
+    OddSplitter(&first_odd_tmp, &second_odd_tmp);
 
     first = Merge(first_even_tmp, second_even_tmp);
     second = Merge(first_odd_tmp, second_odd_tmp);
@@ -89,30 +89,30 @@ std::vector<int> OddEvenMerge(std::vector<int> first, std::vector<int> second) {
     return GetResult(first, second);
 }
 
-void EvenSplitter(std::vector<int> &first, std::vector<int> &second) {
+void EvenSplitter(std::vector<int>* first, std::vector<int>* second) {
     std::vector<int> even_tmp_buf_1;
     std::vector<int> even_tmp_buf_2;
-    for(size_t i = 0; i < first.size(); i += 2)
-        even_tmp_buf_1.push_back(first[i]);
+    for (size_t i = 0; i < first->size(); i += 2)
+        even_tmp_buf_1.push_back((*first)[i]);
 
-    for(size_t i = 0; i < second.size(); i += 2)
-        even_tmp_buf_2.push_back(second[i]);
+    for (size_t i = 0; i < second->size(); i += 2)
+        even_tmp_buf_2.push_back((*second)[i]);
 
-    first = even_tmp_buf_1;
-    second = even_tmp_buf_2;
+    *first = even_tmp_buf_1;
+    *second = even_tmp_buf_2;
 }
 
-void OddSplitter(std::vector<int> &first, std::vector<int> &second) {
+void OddSplitter(std::vector<int>* first, std::vector<int>* second) {
     std::vector<int> odd_tmp_buf_1;
     std::vector<int> odd_tmp_buf_2;
-    for(size_t i = 1; i < first.size(); i += 2)
-        odd_tmp_buf_1.push_back(first[i]);
+    for (size_t i = 1; i < first->size(); i += 2)
+        odd_tmp_buf_1.push_back((*first)[i]);
 
-    for(size_t i = 1; i < second.size(); i += 2)
-        odd_tmp_buf_2.push_back(second[i]);
+    for (size_t i = 1; i < second->size(); i += 2)
+        odd_tmp_buf_2.push_back((*second)[i]);
 
-    first = odd_tmp_buf_1;
-    second = odd_tmp_buf_2;
+    *first = odd_tmp_buf_1;
+    *second = odd_tmp_buf_2;
 }
 
 std::vector<int> GetResult(std::vector<int> first, std::vector<int> second) {
@@ -125,7 +125,7 @@ std::vector<int> GetResult(std::vector<int> first, std::vector<int> second) {
             res.push_back(second[i]);
     }
 
-    for (int i = 1; i < first.size() + second.size() - 1; i += 2) {
+    for (size_t i = 1; i < first.size() + second.size() - 1; i += 2) {
         if (res[i] > res[i + 1])
             std::swap(res[i], res[i + 1]);
     }
@@ -158,7 +158,8 @@ std::vector<int> ParallelRadixSortWithOddEvenMerge(std::vector<int> data_root) {
     MPI_Bcast(send_counts.data(), ProcNum, MPI_INT, 0, MPI_COMM_WORLD);
     MPI_Bcast(offset.data(), ProcNum, MPI_INT, 0, MPI_COMM_WORLD);
     std::vector<int> data_local(send_counts[ProcRank]);
-    MPI_Scatterv(data_root.data(), send_counts.data(), offset.data(), MPI_INT, data_local.data(), send_counts[ProcRank], MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Scatterv(data_root.data(), send_counts.data(), offset.data(),
+                 MPI_INT, data_local.data(), send_counts[ProcRank], MPI_INT, 0, MPI_COMM_WORLD);
     data_local = RadixSort(data_local, data_local.size());
 
     int shift_rank = ProcRank;
@@ -168,7 +169,7 @@ std::vector<int> ParallelRadixSortWithOddEvenMerge(std::vector<int> data_root) {
     int odd = 0;
     MPI_Barrier(MPI_COMM_WORLD);
     while (floor(shift_num / 2)) {
-        if(shift_num % 2 == 1 && flag) {
+        if (shift_num % 2 == 1 && flag) {
             if (ProcRank == ProcNum - 2 * count - odd)
                 data_local = EvenCountProcess(data_local, ProcNum - count - odd);
 
@@ -212,7 +213,7 @@ std::vector<int> EvenCountProcess(std::vector<int> data_local, int partner) {
     MPI_Send(&first_size, 1, MPI_INT, partner, 0, MPI_COMM_WORLD);
     MPI_Send(first.data(), first.size(), MPI_INT, partner, 1, MPI_COMM_WORLD);
 
-    EvenSplitter(first, second);
+    EvenSplitter(&first, &second);
 
     first = Merge(first, second);
 
@@ -224,8 +225,7 @@ std::vector<int> EvenCountProcess(std::vector<int> data_local, int partner) {
     return GetResult(first, second);
 }
 
-void OddCountProcess(std::vector<int> data_local, int partner) {
-    std::vector<int> second = data_local;
+void OddCountProcess(std::vector<int> second, int partner) {
     int second_size = second.size();
 
     MPI_Send(&second_size, 1, MPI_INT, partner, 0, MPI_COMM_WORLD);
@@ -236,7 +236,7 @@ void OddCountProcess(std::vector<int> data_local, int partner) {
     std::vector<int> first(first_size);
     MPI_Recv(first.data(), first_size, MPI_INT, partner, 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
-    OddSplitter(first, second);
+    OddSplitter(&first, &second);
 
     second = Merge(first, second);
     second_size = second.size();

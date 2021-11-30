@@ -9,8 +9,8 @@ int GetMaxPower(std::vector<int> data);
 std::vector<int> Merge(std::vector<int> first, std::vector<int> second);
 std::vector<int> OddEvenMerge(std::vector<int> first, std::vector<int> second);
 
-void EvenSplitter(std::vector<int> &first, std::vector<int> &second);
-void OddSplitter(std::vector<int> &first, std::vector<int> &second);
+void EvenSplitter(std::vector<int>* first, std::vector<int>* second);
+void OddSplitter(std::vector<int>* first, std::vector<int>* second);
 std::vector<int> GetResult(std::vector<int> first, std::vector<int> second);
 
 std::vector<int> ParallelRadixSortWithOddEvenMerge(std::vector<int> root_arr);
