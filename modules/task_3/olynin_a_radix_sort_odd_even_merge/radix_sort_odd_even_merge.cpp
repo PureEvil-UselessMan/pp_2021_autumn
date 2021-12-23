@@ -4,7 +4,7 @@
 #include <ctime>
 #include "../../../modules/task_3/olynin_a_radix_sort_odd_even_merge/radix_sort_odd_even_merge.h"
 
-void RadixSort(std::vector<int>& main_data) {
+std::vector<int> RadixSort(std::vector<int> main_data) {
     std::vector<int> sorted_data[10];
 
     int max = main_data[0];
@@ -21,7 +21,7 @@ void RadixSort(std::vector<int>& main_data) {
 
     int koef = 0;
     while (koef < max_power) {
-        for (int i = 0; i < main_data.size(); i++) {
+        for (size_t i = 0; i < main_data.size(); i++) {
             int digit = main_data[i] / pow(10, koef);
             digit = digit % 10;
             sorted_data[digit].push_back(main_data[i]);
@@ -36,6 +36,8 @@ void RadixSort(std::vector<int>& main_data) {
         }
         koef++;
     }
+
+    return main_data;
 }
 
 std::vector<int> Merge(std::vector<int> first, std::vector<int> second) {
@@ -82,8 +84,7 @@ std::vector<int> OddEvenMerge(std::vector<int> first, std::vector<int> second, i
     while (i < nf && j < ns) {
         if (first[i] < second[j]) {
             result[count++] = first[i++];
-        }
-        else {
+        } else {
             result[count++] = second[j++];
         }
     }
@@ -107,10 +108,7 @@ std::vector<int> ParallelRadixSortWithOddEvenMerge(std::vector<int> data_root) {
         send_count = data_root.size() / ProcNum;
         remain = data_root.size() % ProcNum;
     }
-    if (ProcNum == 1) {
-        RadixSort(data_root);
-        return data_root;
-    }
+
     MPI_Bcast(&send_count, 1, MPI_INT, 0, MPI_COMM_WORLD);
     std::vector<int> data_local(send_count);
     MPI_Scatter(data_root.data(), send_count, MPI_INT,
@@ -120,12 +118,14 @@ std::vector<int> ParallelRadixSortWithOddEvenMerge(std::vector<int> data_root) {
     }
     int merge_count = ceil(logf(ProcNum) / logf(2));
 
-    RadixSort(data_local);
+    data_local = RadixSort(data_local);
 
     std::vector<int> data_copy = data_local;
     size_t size = data_local.size();
-    for (size_t i = 0; i < size; i++) {
-        data_local[i / 2 + (i % 2) * (size / 2 + size % 2)] = data_copy[i];
+    if (ProcNum > 1) {
+        for (size_t i = 0; i < size; i++) {
+            data_local[i / 2 + (i % 2) * (size / 2 + size % 2)] = data_copy[i];
+        }
     }
 
     int counter = 1;

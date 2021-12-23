@@ -14,7 +14,7 @@ TEST(Accessory_Functions_Tests, RadixSort_test) {
         data = GetRandomData(amount, 1000);
         std::vector<int> expected_data = data;
         std::vector<int> actual_data = data;
-        RadixSort(actual_data);
+        actual_data = RadixSort(actual_data);
         sort(expected_data.begin(), expected_data.end());
         ASSERT_TRUE(expected_data == actual_data);
     }
@@ -53,7 +53,7 @@ TEST(Parallel_Radix_Sort_Tests, Parallel_radix_sort_small_test) {
         std::cout <<  "parallel_time = " << std::fixed << parallel_time << std::endl;
         std::vector<int> expected_data = data;
         begin = MPI_Wtime();
-        RadixSort(expected_data);
+        expected_data = RadixSort(expected_data);
         end = MPI_Wtime();
         double sequential_time = end - begin;
         std::cout << "sequential_time = " << std::fixed << sequential_time << std::endl;
@@ -83,7 +83,7 @@ TEST(Parallel_Radix_Sort_Tests, Parallel_radix_sort_medium_test) {
         std::cout <<  "parallel_time = " << std::fixed << parallel_time << std::endl;
         std::vector<int> expected_data = data;
         begin = MPI_Wtime();
-        RadixSort(expected_data);
+        expected_data = RadixSort(expected_data);
         end = MPI_Wtime();
         double sequential_time = end - begin;
         std::cout << "sequential_time = " << std::fixed << sequential_time << std::endl;
@@ -113,7 +113,7 @@ TEST(Parallel_Radix_Sort_Tests, Parallel_radix_sort_large_test) {
         std::cout <<  "parallel_time = " << std::fixed << parallel_time << std::endl;
         std::vector<int> expected_data = data;
         begin = MPI_Wtime();
-        RadixSort(expected_data);
+        expected_data = RadixSort(expected_data);
         end = MPI_Wtime();
         double sequential_time = end - begin;
         std::cout << "sequential_time = " << std::fixed << sequential_time << std::endl;

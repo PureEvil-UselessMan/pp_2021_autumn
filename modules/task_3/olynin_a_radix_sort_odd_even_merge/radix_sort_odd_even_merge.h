@@ -4,7 +4,7 @@
 #ifndef MODULES_TASK_3_OLYNIN_A_RADIX_SORT_ODD_EVEN_MERGE_RADIX_SORT_ODD_EVEN_MERGE_H_
 #define MODULES_TASK_3_OLYNIN_A_RADIX_SORT_ODD_EVEN_MERGE_RADIX_SORT_ODD_EVEN_MERGE_H_
 
-void RadixSort(std::vector<int>& main_data);
+std::vector<int> RadixSort(std::vector<int> main_data);
 
 std::vector<int> Merge(std::vector<int> first, std::vector<int> second);
 std::vector<int> OddEvenMerge(std::vector<int> first, std::vector<int> second, int start, int end, int size);
