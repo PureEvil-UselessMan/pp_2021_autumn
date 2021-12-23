@@ -2,7 +2,6 @@
 #include <gtest/gtest.h>
 #include <gtest-mpi-listener.hpp>
 #include "./radix_sort_odd_even_merge.h"
-#include <iostream>
 
 TEST(Accessory_Functions_Tests, RadixSort_test) {
     int ProcRank;

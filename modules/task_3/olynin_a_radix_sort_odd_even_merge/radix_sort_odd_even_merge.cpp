@@ -103,7 +103,7 @@ std::vector<int> ParallelRadixSortWithOddEvenMerge(std::vector<int> data_root) {
     MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
     MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
     int send_count;
-    int remain;
+    int remain = 0;
     if (ProcRank == 0) {
         send_count = data_root.size() / ProcNum;
         remain = data_root.size() % ProcNum;
